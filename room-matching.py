@@ -10,10 +10,15 @@ Outputs: Optimal room assignments for person i getting room j.
 
 import numpy as np
 from pulp import *
+import sys
 
-# load in data from csv: each row is a person, each column is a room
+# load in data from file: each row is a person, each column is a room
+if (len(sys.argv) == 2):
+    filename = sys.argv[1] # filename with the data
+else:
+    filename = "happiness.csv" # default file
 # on a scale from 1-10, how happy would you be if you got this room?
-data = np.genfromtxt("happiness.csv", delimiter=',', dtype=None)
+data = np.genfromtxt(filename, delimiter=',', dtype=None)
 people = data[1:,0]
 rooms = data[0,1:]
 happiness = data[1:,1:].astype(np.int)
