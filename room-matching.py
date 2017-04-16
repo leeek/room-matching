@@ -17,7 +17,7 @@ if (len(sys.argv) == 2):
     filename = sys.argv[1] # filename with the data
 else:
     filename = "rankings.csv" # default file
-# on a scale from 1-10, how happy would you be if you got this room?
+# how would you rank each room from 1 to n?
 data = np.genfromtxt(filename, delimiter=',', dtype=None)
 people = data[1:,0]
 rooms = data[0,1:]
