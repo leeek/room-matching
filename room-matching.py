@@ -3,8 +3,8 @@
 '''
 Script to optimize room matching for n people.
 
-Inputs: A table of how happy each person would be (on a scale of 1-10) to get
-    each room. Rows correspond to people, and columns correspond to rooms.
+Inputs: A table of how each person ranks each room. Rows correspond to people, 
+    and columns correspond to rooms.
 Outputs: Optimal room assignments for person i getting room j.
 '''
 
@@ -16,18 +16,18 @@ import sys
 if (len(sys.argv) == 2):
     filename = sys.argv[1] # filename with the data
 else:
-    filename = "happiness.csv" # default file
+    filename = "rankings.csv" # default file
 # on a scale from 1-10, how happy would you be if you got this room?
 data = np.genfromtxt(filename, delimiter=',', dtype=None)
 people = data[1:,0]
 rooms = data[0,1:]
-happiness = data[1:,1:].astype(np.int)
+rankings = data[1:,1:].astype(np.int)
 
 # number of rooms/people
 n = len(rooms)
 
 # set up the problem
-prob = LpProblem("Room Matching",LpMaximize)
+prob = LpProblem("Room Matching",LpMinimize)
 
 # initialize table of variables
 xs = [[0 for i in range(n)] for i in range(n)]
@@ -39,7 +39,7 @@ objective = 0
 for i in range(n):
     for j in range(n):
         xs[i][j]=LpVariable(people[i]+' '+rooms[j],0,1,LpInteger)
-        objective += happiness[i][j]*xs[i][j]
+        objective += rankings[i][j]*xs[i][j]
 
 # objective function
 prob += objective
@@ -65,5 +65,5 @@ for v in prob.variables():
     if (v.varValue == 1):
         print v.name
 
-# print average happiness
-print "Average happiness = " + str(value(prob.objective) / n)
+# print average ranking
+print "Average ranking = " + str(value(prob.objective) / n)
